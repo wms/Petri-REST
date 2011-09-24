@@ -97,41 +97,19 @@ $checks = array(
 			'Please set <code>register_globals = Off</code> in your <code>php.ini</code> settings.'
 		);
 	},
-	'change' => function() use ($notify, $self) {
-		$template = $self->html->link('template', 'http://lithify.me/docs/lithium/template');
-
-		return $notify(
-			'notice',
-			"You're using the application's default home page.",
-			"To change this {$template}, edit the file
-			<code>views/pages/home.html.php</code>.
-			To change the layout,
-			(that is what's wrapping content)
-			edit the file <code>views/layouts/default.html.php</code>."
-		);
-	},
-	'routing' => function() use ($notify, $self) {
-		$routing = $self->html->link('routing', 'http://lithify.me/docs/lithium/net/http/Router');
-
-		return $notify(
-			'notice',
-			'Use custom routing.',
-			"To change the {$routing} edit the file <code>config/routes.php</code>."
-		);
-	},
 	'tests' => function() use ($notify, $self) {
 		$tests = $self->html->link('run all tests', array(
 			'controller' => 'lithium\test\Controller',
 			'args' => 'all'
 		));
 		$dashboard = $self->html->link('test dashboard', array('controller' => 'lithium\test\Controller'));
-		$ticket = $self->html->link('file a ticket', 'https://github.com/UnionOfRAD/lithium/issues');
+		$ticket = $self->html->link('file a ticket', 'https://github.com/warrenseymour/petri-rest/issues');
 
 		return $notify(
 			'notice',
 			'Run the tests.',
-			"Check the builtin {$dashboard} or {$tests} now to ensure Lithium
-			is working as expected. Do not hesitate to {$ticket} in case a test fails."
+			"Check the builtin {$dashboard} or {$tests} now to ensure Lithium and Petri-REST
+			are working as expected. Do not hesitate to {$ticket} in case a test fails."
 		);
 	},
 	'dbSupport' => function() use ($notify, $support) {
@@ -169,34 +147,3 @@ $checks = array(
 <?php foreach ($checks as $check): ?>
 	<?php echo $check(); ?>
 <?php endforeach; ?>
-
-<h3>Additional Resources</h3>
-<ul class="additional-resources">
-	<li>
-		<?php echo $this->html->link('Quickstart', 'http://lithify.me/docs/manual/quickstart'); ?>
-		is a guide for PHP users who are looking to get a good idea of what Lithium can do.
-		The guide is part of the official Lithium manual,
-		<?php echo $this->html->link('The Definitive Guide', 'http://lithify.me/docs/manual'); ?>.
-	</li>
-	<li>
-		The <?php echo $this->html->link('API documentation', 'http://lithify.me/docs/lithium'); ?>
-		has all the implementation details you've been looking for.
-	</li>
-	<li>
-		Chat with other Lithium users and the team developing Lithium.
-		For <em>general support</em> hop on the
-		<?php echo $this->html->link('#li3 channel', 'irc://irc.freenode.net/#li3'); ?>
-		or read the
-		<?php echo $this->html->link('logs', 'http://lithify.me/bot/logs/li3'); ?>.
-		For <em>core discussions</em> join us in the
-		<?php echo $this->html->link('#li3-core channel', 'irc://irc.freenode.net/#li3-core'); ?>
-		or read the
-		<?php echo $this->html->link('logs', 'http://lithify.me/bot/logs/li3-core'); ?>.
-	</li>
-	<li>
-		Browse the Lithium
-		<?php echo $this->html->link('Repository', 'https://github.com/UnionOfRAD/lithium'); ?>
-		or read the
-		<?php echo $this->html->link('Wiki', 'https://github.com/UnionOfRAD/lithium/wiki'); ?>.
-	</li>
-</ul>

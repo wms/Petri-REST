@@ -13,6 +13,8 @@ if (!Environment::is('production')) {
 	Router::connect('/test', array('controller' => 'lithium\test\Controller'));
 }
 
+Router::connect('/', 'Pages::view');
+
 /**
  * RESTful routing.
  * @todo: Set type as json automatically and handle missing ids and POST data here
