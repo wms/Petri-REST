@@ -1,3 +1,6 @@
 [submodule "libraries/lithium"]
 	path = libraries/lithium
 	url = git://github.com/UnionOfRAD/lithium.git
+[submodule "libraries/twitter-bootstrap"]
+	path = libraries/twitter-bootstrap
+	url = https://github.com/twitter/bootstrap.git
