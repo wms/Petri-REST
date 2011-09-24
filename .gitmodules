@@ -4,3 +4,6 @@
 [submodule "libraries/twitter-bootstrap"]
 	path = libraries/twitter-bootstrap
 	url = https://github.com/twitter/bootstrap.git
+[submodule "libraries/underscore"]
+	path = libraries/underscore
+	url = https://github.com/documentcloud/underscore.git
