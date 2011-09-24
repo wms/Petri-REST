@@ -7,3 +7,6 @@
 [submodule "libraries/underscore"]
 	path = libraries/underscore
 	url = https://github.com/documentcloud/underscore.git
+[submodule "libraries/backbone"]
+	path = libraries/backbone
+	url = https://github.com/documentcloud/backbone.git
