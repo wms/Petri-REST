@@ -10,3 +10,6 @@
 [submodule "libraries/backbone"]
 	path = libraries/backbone
 	url = https://github.com/documentcloud/backbone.git
+[submodule "libraries/require"]
+	path = libraries/require
+	url = https://github.com/jrburke/requirejs.git
