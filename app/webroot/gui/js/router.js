@@ -17,9 +17,10 @@ define([
         },
         defaultAction: function(actions){
             // We have no matching route, lets just log what the URL was
-            workflowListView.render();
-            workflowCreateView.render();
-            console.log('No route:', actions);
+            if(workflowListView.render()) {
+                workflowCreateView.render();
+            };
+            //console.log('No route:', actions);
         }
     });
 
