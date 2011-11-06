@@ -2,19 +2,36 @@ define([
     'jQuery',
     'Underscore',
     'Backbone',
-    'text!templates/workflows/create.html'
-], function($, _, Backbone, workflowCreateTemplate) {
+    'models/workflows',
+    'text!templates/workflows/create.html',
+    'text!templates/common/error.html'
+], function($, _, Backbone, workflowsModel, workflowCreateTemplate, errorTemplate) {
     var workflowCreateView = Backbone.View.extend({
-        el: $('#main'),
+        events: {
+            'submit form': 'save'
+        },
+
+        save: function(event) {
+            var self = this;
+            event.preventDefault();
+            return this.collection.create({
+                name: this.$('[name=name]').val()
+            }, {
+                error: function(workflow, error) {
+                    var c = _.template(errorTemplate, JSON.parse(error.responseText));
+                    self.el.html(c);
+                }
+            });
+        },
 
         render: function() {
             var data = {
                 workflow: {}
             };
             var compiledTemplate = _.template(workflowCreateTemplate, data);
-            this.el.append(compiledTemplate);
+            this.el.html(compiledTemplate);
         }
     });
 
-    return new workflowCreateView;
+    return workflowCreateView;
 });

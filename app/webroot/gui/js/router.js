@@ -2,26 +2,33 @@ define([
     'jQuery',
     'Underscore',
     'Backbone',
+    'collections/workflows',
     'views/workflows/list',
     'views/workflows/create'
-], function($, _, Backbone, workflowListView, workflowCreateView){
+], function($, _, Backbone, workflowsCollection, workflowListView, workflowCreateView){
     var AppRouter = Backbone.Router.extend({
         routes: {
-            // Define some URL routes
-            '/workflows': 'showWorkflows',
-            // Default
-            '*actions': 'defaultAction'
-        },
-        showWorkflows: function(){
-            workflowListView.render();
+            '': 'defaultAction'
         },
         defaultAction: function(actions){
-            workflowListView.render(function() {
-                workflowCreateView.render();
+            var collection = new workflowsCollection;
+
+            var $listEl = $('<div />').appendTo('#main');
+            var $createEl = $('<div />').appendTo('#main');
+
+            var listView = new workflowListView({
+                collection: collection,
+                el: $listEl
             });
 
-            // We have no matching route, lets just log what the URL was
-            //console.log('No route:', actions);
+            var createView = new workflowCreateView({
+                collection: collection,
+                el: $createEl
+            })
+
+            listView.render(function() {
+                createView.render();
+            });
         }
     });
 

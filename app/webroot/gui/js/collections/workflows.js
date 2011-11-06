@@ -9,5 +9,5 @@ define([
         url: '/pr/workflows'
     });
 
-    return new workflowsCollection;
+    return workflowsCollection;
 })
