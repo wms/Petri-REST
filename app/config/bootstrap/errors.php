@@ -20,7 +20,8 @@ ErrorHandler::apply('lithium\action\Dispatcher::run', array(), function($info, $
 		'controller' => '_errors',
 		'template' => 'development',
 		'layout' => 'error',
-		'request' => $params['request']
+		'request' => $params['request'],
+        'type' => 'json'
 	));
 	return $response;
 });
