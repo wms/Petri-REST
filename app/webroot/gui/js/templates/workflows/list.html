@@ -1,6 +1,10 @@
 <h2>Defined Workflows</h2>
 <% if(workflows.length) { %>
-<p>Workflows</p>
+<ul>
+<% _.each(workflows.toJSON(), function(workflow) { %>
+<li><%= workflow.name %></li>
+<% }); %>
+</ul>
 <% } else { %>
 <p>No Workflows have been defined yet. You need to create some.</p>
 <% } %>

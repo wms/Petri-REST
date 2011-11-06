@@ -9,11 +9,16 @@ define([
         el: $('#main'),
 
         render: function() {
-            var data = {
-                workflows: {}
-            };
-            var compiledTemplate = _.template(workflowListTemplate, data);
-            this.el.append(compiledTemplate);
+            var self = this;
+            workflowsCollection.fetch({
+                success: function(workflows) {
+                    var compiledTemplate = _.template(workflowListTemplate);
+                    self.el.prepend(compiledTemplate({
+                        workflows: workflows,
+                        _: _
+                    }));
+                }
+            });
         }
     });
 
