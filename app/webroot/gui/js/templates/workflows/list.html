@@ -1,7 +1,8 @@
 <h2>Defined Workflows</h2>
-<% if(workflows.length) { %>
+<% console.debug(data.workflows); %>
+<% if(data.workflows.length) { %>
 <ul>
-<% _.each(workflows.toJSON(), function(workflow) { %>
+<% _.each(data.workflows, function(workflow) { %>
 <li><%= workflow.name %></li>
 <% }); %>
 </ul>

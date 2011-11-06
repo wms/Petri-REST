@@ -16,10 +16,11 @@ define([
             workflowListView.render();
         },
         defaultAction: function(actions){
-            // We have no matching route, lets just log what the URL was
-            if(workflowListView.render()) {
+            workflowListView.render(function() {
                 workflowCreateView.render();
-            };
+            });
+
+            // We have no matching route, lets just log what the URL was
             //console.log('No route:', actions);
         }
     });

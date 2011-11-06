@@ -9,24 +9,23 @@ define([
     var workflowListView = Backbone.View.extend({
         el: $('#main'),
 
-        render: function() {
+        render: function(success) {
             var self = this;
             workflowsCollection.fetch({
-                success: function(workflows) {
+                success: function(data) {
                     var compiledTemplate = _.template(workflowListTemplate);
-                    self.el.prepend(compiledTemplate({
-                        workflows: workflows,
+                    self.el.html(compiledTemplate({
+                        data: data.toJSON()[0],
                         _: _
                     }));
+                    success();
                 },
                 error: function(workflows, error) {
-                    foo = error;
                     var c = _.template(errorTemplate, JSON.parse(error.responseText));
-                    self.el.prepend(c);
-
-                    return false;
+                    self.el.html(c);
                 }
             });
+            return this;
         }
     });
 
