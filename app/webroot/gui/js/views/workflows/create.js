@@ -17,6 +17,9 @@ define([
             return this.collection.create({
                 name: this.$('[name=name]').val()
             }, {
+                success: function(workflow) {
+                    this.$('form', self.el)[0].reset();
+                },
                 error: function(workflow, error) {
                     var c = _.template(errorTemplate, JSON.parse(error.responseText));
                     self.el.html(c);
