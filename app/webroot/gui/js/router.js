@@ -34,6 +34,10 @@ define([
 
     var initialize = function(){
         var app_router = new AppRouter;
+        // Create a router in the global App if possible
+        if(App) {
+            App.Router = app_router;
+        }
         Backbone.history.start();
     };
     return { 

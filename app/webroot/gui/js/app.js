@@ -5,6 +5,7 @@ define([
     'router'
 ], function($, _, Backbone, Router){
     var initialize = function(){
+        App = {};
         console.debug('App.initialize');
         Router.initialize();
     }
