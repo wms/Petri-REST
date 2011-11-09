@@ -16,7 +16,7 @@ define([
                 success: function(data) {
                     var compiledTemplate = _.template(workflowListTemplate);
                     self.el.html(compiledTemplate({
-                        data: data.toJSON()[0],
+                        workflows: data.toJSON(),
                         _: _
                     }));
                     if(typeof(success) == 'function') {
