@@ -4,31 +4,36 @@ define([
     'Backbone',
     'collections/workflows',
     'views/workflows/list',
-    'views/workflows/create'
-], function($, _, Backbone, workflowsCollection, workflowListView, workflowCreateView){
+    'views/workflows/create',
+    'views/ui/panel'
+], function($, _, Backbone, workflowsCollection, workflowListView, workflowCreateView, UIPanel){
     var AppRouter = Backbone.Router.extend({
         routes: {
             '': 'defaultAction'
         },
         defaultAction: function(actions){
+            $('#main').empty();
+
             var collection = new workflowsCollection;
 
-            var $listEl = $('<div />').appendTo('#main');
-            var $createEl = $('<div />').appendTo('#main');
+            var panel = new UIPanel({
+                el: $('#main'),
+                title: 'Defined Workflows',
+                containers: 2
+            });
 
             var listView = new workflowListView({
                 collection: collection,
-                el: $listEl
+                el: panel.containers[0],
             });
 
             var createView = new workflowCreateView({
                 collection: collection,
-                el: $createEl
+                el: panel.containers[1]
             })
 
-            listView.render(function() {
-                createView.render();
-            });
+            listView.render();
+            createView.render();
         }
     });
 
