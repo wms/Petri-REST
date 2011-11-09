@@ -9,7 +9,7 @@ define([
 ], function($, _, Backbone, workflowsCollection, workflowListView, workflowCreateView, UIPanel){
     var AppRouter = Backbone.Router.extend({
         routes: {
-            '': 'defaultAction'
+            '*actions': 'defaultAction'
         },
         defaultAction: function(actions){
             $('#main').empty();
