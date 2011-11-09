@@ -6,7 +6,11 @@ define([
 ], function($, _, Backbone, workflowsModel) {
     var workflowsCollection = Backbone.Collection.extend({
         model: workflowsModel,
-        url: '/pr/workflows'
+        url: '/pr/workflows',
+
+        parse: function(response) {
+            return response.workflows;
+        }
     });
 
     return workflowsCollection;
