@@ -8,6 +8,18 @@ define([
         
         parse: function(response) {
             return response.workflow;
+        },
+
+        disable: function() {
+            return this.save({
+                enabled: false
+            });
+        },
+
+        enable: function() {
+            return this.save({
+                enabled: true
+            });
         }
     });
 

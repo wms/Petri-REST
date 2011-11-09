@@ -38,11 +38,21 @@ define([
         },
 
         events: {
-            "click .btn.edit": 'openEditor'
+            "click .btn.edit": 'openEditor',
+            "click .btn.disable": 'disable',
+            "click .btn.enable": 'enable'
         },
 
         openEditor: function(){
             App.Router.navigate('edit/' + this.model.get('_id'));
+        },
+
+        disable: function() {
+            return this.model.disable();
+        },
+
+        enable: function() {
+            return this.model.enable();
         },
 
         render: function() {

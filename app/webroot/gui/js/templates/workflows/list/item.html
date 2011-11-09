@@ -11,7 +11,11 @@
     </div>
     <div class="span3" style="text-align:right;float:right">
         <a class="btn primary edit">Edit</a>
-        <a class="btn" href="#">Disable</a>
+        <% if(workflow.enabled) { %>
+        <a class="btn disable" href="#">Disable</a>
+        <% } else { %>
+        <a class="btn enable" href="#">Enable</a>
+        <% } %>
     </div>
 </div>
 <hr />
