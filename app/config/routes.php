@@ -15,6 +15,11 @@ if (!Environment::is('production')) {
 
 Router::connect('/', 'Pages::view');
 
+$getIdFromBody = function($request) {
+    $request->params['id'] = $request->data['_id'];
+    return $request;
+};
+
 /**
  * RESTful routing.
  * @todo: Set type as json automatically and handle missing ids and POST data here
@@ -40,10 +45,20 @@ Router::connect('/{:controller}/{:id:[0-9a-f]{24}}', array(
     'action' => 'edit',
     'type' => 'json'
 ));
+Router::connect('/{:controller}', array(
+    'http:method' => 'PUT',
+    'action' => 'edit',
+    'type' => 'json'
+), $getIdFromBody);
 Router::connect('/{:controller}/{:id:[0-9a-f]{24}}', array(
     'http:method' => 'DELETE',
     'action' => 'delete',
     'type' => 'json'
 ));
+Router::connect('/{:controller}', array(
+    'http:method' => 'DELETE',
+    'action' => 'edit',
+    'type' => 'json'
+), $getIdFromBody);
 
 ?>
