@@ -31,9 +31,16 @@ class WorkflowsController extends \lithium\action\Controller {
             //exception
             return false;
 		}
-        $result = $workflow->save($this->request->data);
 
-		return compact('result', 'workflow');
+        if($result = $workflow->save($this->request->data)) {
+            return compact('result', 'workflow');
+        }
+        else {
+            $error = $workflow->errors();
+            $workflow->enabled = false;
+            $this->response->status(400);
+            return compact('result', 'error', 'workflow');
+        }
 	}
 
 	public function delete() {

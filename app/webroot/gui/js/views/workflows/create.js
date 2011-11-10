@@ -17,21 +17,17 @@ define([
             return this.collection.create({
                 name: this.$('[name=name]').val()
             }, {
-                success: function(workflow) {
+                success: function(collection, response) {
                     $('form', self.el)[0].reset();
                 },
-                error: function(workflow, error) {
-                    var c = _.template(errorTemplate, JSON.parse(error.responseText));
-                    self.el.html(c);
+                error: function(collection, response) {
+                    App.Error.modal('Could not create Workflow', response.responseText);
                 }
             });
         },
 
         render: function() {
-            var data = {
-                workflow: {}
-            };
-            var compiledTemplate = _.template(workflowCreateTemplate, data);
+            var compiledTemplate = _.template(workflowCreateTemplate);
             this.el.html(compiledTemplate);
         }
     });

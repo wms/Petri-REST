@@ -9,6 +9,7 @@ define([
     var workflowListView = Backbone.View.extend({
         initialize: function() {
             this.collection.fetch();
+            this.collection.bind('error', this.error, this);
             this.collection.bind('reset', this.render, this);
             this.collection.bind('change', this.render, this);
             this.collection.bind('add', this.render, this);
@@ -29,6 +30,10 @@ define([
             }
 
             return this;
+        },
+
+        error: function(collection, response) {
+            this.el.html(_.template(errorTemplate, JSON.parse(response.responseText)));
         }
     });
 
@@ -52,7 +57,11 @@ define([
         },
 
         enable: function() {
-            return this.model.enable();
+            return this.model.enable({
+                error: function(c, r) {
+                    App.Error.modal('Could not enable Workflow', r.responseText);
+                }
+            });
         },
 
         render: function() {
