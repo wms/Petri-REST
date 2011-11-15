@@ -1,15 +1,23 @@
 define([
     'Underscore',
-    'Backbone'
-], function(_, Backbone) {
+    'Backbone',
+    'collections/places',
+    'collections/transitions',
+    'collections/arcs',
+], function(_, Backbone, placesCollection, transitionsCollection, arcsCollection) {
     var workflowsModel = Backbone.Model.extend({
-        url: '/pr/workflows',
+        urlRoot: '/pr/workflows',
         idAttribute: '_id',
 
-        initialize: function() {
-            Backbone.Model.prototype.initialize.apply(this, arguments);
+        initialize: function(options) {
             _.bindAll(this, 'prepare_revert', 'revert');
             this.prepare_revert();
+
+            if(options.fetchChildren) {
+                this.places = new placesCollection,
+                this.transitions = new transitionsCollection,
+                this.arcs = new arcsCollection
+            }
         },
         
         parse: function(response) {

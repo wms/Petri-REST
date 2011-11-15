@@ -2,22 +2,46 @@ define([
     'jQuery',
     'Underscore',
     'Backbone',
+    'models/workflows',
     'collections/workflows',
     'views/workflows/list',
     'views/workflows/create',
+    'views/workflows/edit',
     'views/ui/panel'
-], function($, _, Backbone, workflowsCollection, workflowListView, workflowCreateView, UIPanel){
+], function($, _, Backbone, workflowsModel, workflowsCollection, workflowListView, workflowCreateView, workflowEditView, UIPanel){
+    var $canvas = $('#main');
+
     var AppRouter = Backbone.Router.extend({
         routes: {
-            '*actions': 'defaultAction'
+            'edit/:id': 'edit',
+            '*actions': 'index'
         },
-        defaultAction: function(actions){
-            $('#main').empty();
+        edit: function(id) {
+            $canvas.empty();
+
+            var workflow = new workflowsModel({
+                _id: id,
+                fetchChildren: true
+            });
+
+            var panel = new UIPanel({
+                el: $canvas,
+                title: 'Workflow Editor',
+                containers: 1
+            });
+
+            var editor = new workflowEditView({
+                model: workflow,
+                el: panel.containers[0]
+            });
+        },
+        index: function(actions){
+            $canvas.empty();
 
             var collection = new workflowsCollection;
 
             var panel = new UIPanel({
-                el: $('#main'),
+                el: $canvas,
                 title: 'Defined Workflows',
                 containers: 2
             });

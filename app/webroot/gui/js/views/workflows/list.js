@@ -49,7 +49,7 @@ define([
         },
 
         openEditor: function(){
-            App.Router.navigate('edit/' + this.model.get('_id'));
+            App.Router.navigate('edit/' + this.model.get('_id'), true);
         },
 
         disable: function() {
