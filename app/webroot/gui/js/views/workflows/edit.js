@@ -12,6 +12,8 @@ define([
             "click .btn.add-place": 'addPlace',
             "click .btn.add-transition": 'addTransition',
             "click .btn.add-arc": 'addArc',
+
+            "click .place": 'editPlace'
         },
 
         occupied: [],
@@ -54,6 +56,10 @@ define([
             this.model.places.create({
                 workflow_id: this.model.id
             });
+        },
+        editPlace: function(event) {
+            var id = $(event.target).attr('id');
+            this.model.places.getById(id).destroy();
         },
         addTransition: function() {
             this.model.transitions.create({

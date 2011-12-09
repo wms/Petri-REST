@@ -10,6 +10,11 @@ define([
 
         parse: function(response) {
             return response.places;
+        },
+        getById: function(id) {
+            return this.find(function(p) {
+                return p.id == id
+            }, id);
         }
     });
 
