@@ -8,7 +8,13 @@ use lithium\action\DispatchException;
 class PlacesController extends \lithium\action\Controller {
 
 	public function index() {
-		$places = Place::all();
+        if(isset($this->request->query['workflow_id'])) {
+            $conditions = array(
+                'workflow_id' => $this->request->query['workflow_id']
+            );
+        }
+		$places = Place::all(compact('conditions'));
+
 		return compact('places');
 	}
 
