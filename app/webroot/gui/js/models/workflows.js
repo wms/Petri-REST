@@ -14,9 +14,9 @@ define([
             this.prepare_revert();
 
             if(options.fetchChildren) {
-                this.places = new placesCollection,
-                this.transitions = new transitionsCollection,
-                this.arcs = new arcsCollection
+                this.places = new placesCollection;
+                this.transitions = new transitionsCollection;
+                this.arcs = new arcsCollection;
             }
         },
         

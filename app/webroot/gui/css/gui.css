@@ -32,5 +32,20 @@ html, body {
 }
 .workflow-editor .canvas {
     height: 350px;
+    position: relative;
 }
-
+.workflow-editor .canvas .place {
+    position: absolute;
+    margin-left: -16px;
+    width: 32px;
+    margin-top: -16px;
+    height: 32px;
+    background-color: red;
+    font-color: white;
+}
+.workflow-editor .canvas .place p.title {
+    margin-top: -24px;
+    margin-left: -16px;
+    width: 64px;
+    text-align: center;
+}
