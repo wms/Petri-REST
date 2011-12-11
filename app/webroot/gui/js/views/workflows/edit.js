@@ -2,10 +2,11 @@ define([
     'jQuery',
     'Underscore',
     'Backbone',
+    'views/ui/panel/grid',
     'text!templates/workflows/edit.html',
     'text!templates/workflows/editor/place.html',
     'text!templates/common/error.html'
-], function($, _, Backbone, workflowEditTemplate, workflowPlaceTemplate, errorTemplate) {
+], function($, _, Backbone, UIGridPanel, workflowEditTemplate, workflowPlaceTemplate, errorTemplate) {
 
     var workflowEditView = Backbone.View.extend({
         events: {
@@ -16,16 +17,12 @@ define([
             "click .place": 'editPlace'
         },
 
-        occupied: [],
-
         initialize: function() {
-            this.model.bind('change', this.render, this);
-            this.model.fetch();
 
-            this.model.places.bind('all', this.renderWorkflow, this);
-            this.model.places.fetch({
-                data: { workflow_id: this.model.id }
-            });
+            this.model.bind('change', this.render, this);
+            this.model.places.bind('all', this.renderPlaces, this);
+
+            this.model.fetch();
         },
 
         render: function() {
@@ -35,20 +32,31 @@ define([
 
             this.el.html(c);
 
+            this.gridView = new UIGridPanel({
+                el: $('.canvas', this.el)
+            });
+
+            this.model.places.fetch({
+                data: { workflow_id: this.model.id }
+            });
+
             return this;
         },
 
-        renderWorkflow: function() {
-            var $canvas = $('.canvas', this.el)
-                .empty();
-            this.occupied.length = 0;
+        renderPlaces: function() {
+            this.gridView.clear();
 
             this.model.places.each(function(place) {
-                var c = _.template(workflowPlaceTemplate, {
-                    place: place,
-                    position: this.getPosition(place)
-                });
-                $('.canvas', this.el).append(c);
+                var el = this.el;
+                this.gridView.addItem({
+                    model: place,
+                    render: function() {
+                        var c = _.template(workflowPlaceTemplate, {
+                            place: place,
+                        });
+                        this.el.append(c);
+                    }
+                })
             }, this);
         },
 
@@ -88,9 +96,6 @@ define([
                 x: position.x * 64 + 32,
                 y: 350 - position.y * 64 - 32
             };
-            foo = this.occupied;
-            bar = this.position;
-
             return "left:"+t.x+"px;top:"+t.y+"px;";
         }
     });

@@ -30,12 +30,14 @@ html, body {
     border-bottom: 1px solid #ddd;
     padding: 5px 0;
 }
-.workflow-editor .canvas {
+.workflow-editor .ui-grid-panel {
     height: 350px;
     position: relative;
 }
-.workflow-editor .canvas .place {
+.workflow-editor .ui-grid-panel .ui-grid-item {
     position: absolute;
+}
+.workflow-editor .canvas .place {
     margin-left: -16px;
     width: 32px;
     margin-top: -16px;
@@ -44,7 +46,8 @@ html, body {
     font-color: white;
 }
 .workflow-editor .canvas .place p.title {
-    margin-top: -24px;
+    position: relative;
+    top: -24px;
     margin-left: -16px;
     width: 64px;
     text-align: center;
