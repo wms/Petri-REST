@@ -69,10 +69,6 @@ define([
                 workflow_id: this.model.id
             });
         },
-        editPlace: function(event) {
-            var id = $(event.target).attr('id');
-            this.model.places.getById(id).destroy();
-        },
         addTransition: function() {
             this.model.transitions.create({
                 workflow_id: this.model.id
