@@ -3,10 +3,12 @@ define([
     'Underscore',
     'Backbone',
     'views/ui/panel/grid',
+    'views/ui/panel/floating',
     'text!templates/workflows/edit.html',
     'text!templates/workflows/editor/place.html',
+    'text!templates/workflows/editor/place/edit.html',
     'text!templates/common/error.html'
-], function($, _, Backbone, UIGridPanel, workflowEditTemplate, workflowPlaceTemplate, errorTemplate) {
+], function($, _, Backbone, UIGridPanel, UIFloatingPanel, workflowEditTemplate, workflowPlaceTemplate, placeEditFormTemplate, errorTemplate) {
 
     var workflowEditView = Backbone.View.extend({
         events: {
@@ -42,11 +44,12 @@ define([
         },
 
         renderPlaces: function() {
-            this.gridView.clear();
+            var grid = this.gridView
+                .clear();
 
             this.model.places.each(function(place) {
                 var el = this.el;
-                this.gridView.addItem({
+                grid.addItem({
                     model: place,
                     events: {
                         "click": 'editPlace'
@@ -58,7 +61,21 @@ define([
                         this.el.append(c);
                     },
                     editPlace: function() {
-                        this.model.destroy();
+                        var placeEditWindow = new UIFloatingPanel({
+                            el: grid.el,
+                            orientation: 'right'
+                        });
+                        if(placeEditWindow) {
+                            grid.disableItemEvents();
+                            var editPlaceForm = new PlaceEditForm({
+                                el: placeEditWindow.el,
+                                model: this.model,
+                                cancel: function() {
+                                    grid.enableItemEvents();
+                                    placeEditWindow.remove();
+                                }
+                            });
+                        }
                     }
                 });
             }, this);
@@ -79,6 +96,35 @@ define([
                 workflow_id: this.model.id
             });
         },
+    });
+
+    var PlaceEditForm = Backbone.View.extend({
+        events: {
+            "click .btn.cancel": 'cancel',
+            "click .btn.delete": 'destroy'
+        },
+        initialize: function(options) {
+            this.cancel = options.cancel || function() {};
+
+            this.el = $('<div />')
+                .appendTo(this.el)
+                .addClass('place-edit-form');
+
+            this.delegateEvents();
+            this.render();
+        },
+        render: function() {
+            var c = _.template(placeEditFormTemplate);
+            this.el.html(c); 
+            return this;
+        },
+        destroy: function() {
+            this.model.destroy();
+            return this;
+        },
+        cancel: function() {
+            return this;
+        }
     });
 
     return workflowEditView;

@@ -39,12 +39,25 @@ define([
         clear: function() {
             this.el.empty();
             this.items.length = 0;
+            return this;
         },
         setPosition: function(item) {
             item.el.css({
                 top: 350 - item.position.y * 64 - 32 + 'px',
                 left: item.position.x * 64 + 32 + 'px'
             });
+        },
+        disableItemEvents: function() {
+            _.each(this.items, function(item) {
+                item.delegateEvents({});
+            });
+            return this;
+        },
+        enableItemEvents: function() {
+            _.each(this.items, function(item) {
+                item.delegateEvents(item.events);
+            });
+            return this;
         }
     });
 
