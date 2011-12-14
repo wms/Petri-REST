@@ -13,8 +13,6 @@ define([
             "click .btn.add-place": 'addPlace',
             "click .btn.add-transition": 'addTransition',
             "click .btn.add-arc": 'addArc',
-
-            "click .place": 'editPlace'
         },
 
         initialize: function() {
@@ -50,13 +48,19 @@ define([
                 var el = this.el;
                 this.gridView.addItem({
                     model: place,
+                    events: {
+                        "click": 'editPlace'
+                    },
                     render: function() {
                         var c = _.template(workflowPlaceTemplate, {
                             place: place,
                         });
                         this.el.append(c);
+                    },
+                    editPlace: function() {
+                        this.model.destroy();
                     }
-                })
+                });
             }, this);
         },
 
@@ -79,25 +83,6 @@ define([
                 workflow_id: this.model.id
             });
         },
-        // @todo: refactor into a GridLayout view
-        getPosition: function(place) {
-            var position = place.position ? place.position : {x: 0, y: 0};
-
-            _.each(this.occupied, function(p) {
-                if(p.x == position.x) {
-                    position.x++;
-                }            
-            }, position);
-
-            this.occupied.push(position);
-
-            // Transform grid co-ordinates to pixels
-            var t = {
-                x: position.x * 64 + 32,
-                y: 350 - position.y * 64 - 32
-            };
-            return "left:"+t.x+"px;top:"+t.y+"px;";
-        }
     });
 
     return workflowEditView;

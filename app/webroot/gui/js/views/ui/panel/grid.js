@@ -19,7 +19,6 @@ define([
             var position = {x: 0, y: 0};
 
             _.each(this.items, function(item) {
-                console.debug(item);
                 if(item.position.x == position.x) {
                     position.x++;
                 }
@@ -51,10 +50,16 @@ define([
 
     var UIGridItem = Backbone.View.extend({
         initialize: function(options) {
-            this.render = options.render;
+            // Apply passed-in attributes
+            for(var key in options) {
+                this[key] = options[key];
+            };
+            // Over-ride rendering element
             this.el = $('<div />')
                 .appendTo(this.el)
                 .addClass('ui-grid-item');
+
+            this.delegateEvents();
 
             this.render();
         },
