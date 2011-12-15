@@ -13,3 +13,6 @@
 [submodule "libraries/require"]
 	path = libraries/require
 	url = https://github.com/jrburke/requirejs.git
+[submodule "libraries/backbone.modelbinding"]
+	path = libraries/backbone.modelbinding
+	url = https://github.com/derickbailey/backbone.modelbinding.git
