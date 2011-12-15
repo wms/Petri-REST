@@ -1,0 +1,17 @@
+<form class="edit-place">
+    <fieldset>
+        <legend>Edit Place</legend>
+        <div class="clearfix">
+            <label for="place-name">Name</label>
+            <div class="input">
+                <input name="name" type="text" value="<%= place.name %>" />
+            </div>
+        </div>
+        <div class="actions">
+            <input class="btn primary save" type="submit" value="Save" />
+            <a class="btn cancel">Cancel</a>
+            or
+            <a class="btn danger delete">Delete</a>
+        </div>
+    </fieldset>
+</form>

@@ -60,3 +60,6 @@ html, body {
     width: 64px;
     text-align: center;
 }
+.workflow-editor .edit-place {
+    margin-top: 16px;
+}
