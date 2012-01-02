@@ -7,8 +7,9 @@ define([
     'text!templates/workflows/edit.html',
     'text!templates/workflows/editor/place.html',
     'text!templates/workflows/editor/place/edit.html',
+    'text!templates/workflows/editor/transition.html',
     'text!templates/common/error.html'
-], function($, _, Backbone, UIGridPanel, UIFloatingPanel, workflowEditTemplate, workflowPlaceTemplate, placeEditFormTemplate, errorTemplate) {
+], function($, _, Backbone, UIGridPanel, UIFloatingPanel, workflowEditTemplate, workflowPlaceTemplate, placeEditFormTemplate, workflowTransitionTemplate, errorTemplate) {
 
     var workflowEditView = Backbone.View.extend({
         events: {
@@ -21,6 +22,7 @@ define([
 
             this.model.bind('change', this.render, this);
             this.model.places.bind('all', this.renderPlaces, this);
+            this.model.transitions.bind('all', this.renderTransitions, this);
 
             this.model.fetch();
         },
@@ -39,10 +41,14 @@ define([
             this.model.places.fetch({
                 data: { workflow_id: this.model.id }
             });
+            this.model.transitions.fetch({
+                data: { workflow_id: this.model.id }
+            });
 
             return this;
         },
 
+        // @todo: refactor
         renderPlaces: function() {
             var grid = this.gridView
                 .clear();
@@ -77,6 +83,48 @@ define([
                                 onSave: function() {
                                     grid.enableItemEvents();
                                     placeEditWindow.remove();
+                                }
+                            });
+                        }
+                    }
+                });
+            }, this);
+        },
+
+        renderTransitions: function() {
+            var grid = this.gridView;
+
+            this.model.transitions.each(function(transition) {
+                console.debug(transition);
+                var el = this.el;
+                grid.addItem({
+                    model: transition,
+                    events: {
+                        "click": 'editTransition'
+                    },
+                    render: function() {
+                        var c = _.template(workflowTransitionTemplate, {
+                            transition: transition.attributes,
+                        });
+                        this.el.append(c);
+                    },
+                    editTransition: function() {
+                        var transitionEditWindow = new UIFloatingPanel({
+                            el: grid.el,
+                            orientation: 'right'
+                        });
+                        if(transitionEditWindow) {
+                            grid.disableItemEvents();
+                            var editTransitionForm = new TransitionEditForm({
+                                el: transitionEditWindow.el,
+                                model: this.model,
+                                cancel: function() {
+                                    grid.enableItemEvents();
+                                    transitionEditWindow.remove();
+                                },
+                                onSave: function() {
+                                    grid.enableItemEvents();
+                                    transitionEditWindow.remove();
                                 }
                             });
                         }
