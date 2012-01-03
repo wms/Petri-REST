@@ -150,6 +150,7 @@ define([
         },
     });
 
+    // @todo: refactor
     var PlaceEditForm = Backbone.View.extend({
         events: {
             "submit form": 'save',
@@ -186,6 +187,57 @@ define([
                 },
                 error: function(collection, response) {
                     App.Error.modal("Could not save Place", response.responseText);
+                }
+            });
+
+            event.preventDefault();
+            return false;
+        },
+        destroy: function() {
+            this.model.destroy();
+            self.remove();
+        },
+        cancel: function() {
+            return this;
+        }
+    });
+
+    var TransitionEditForm = Backbone.View.extend({
+        events: {
+            "submit form": 'save',
+            "click .btn.cancel": 'cancel',
+            "click .btn.delete": 'destroy'
+        },
+        initialize: function(options) {
+            this.cancel = options.cancel || function() {};
+            this.onSave = options.onSave || function() {};
+
+            this.el = $('<div />')
+                .appendTo(this.el)
+                .addClass('transition-edit-form');
+
+            this.delegateEvents();
+            this.render();
+        },
+        render: function() {
+            var c = _.template(placeEditFormTemplate, {
+                place: this.model.attributes
+            });
+            this.el.html(c); 
+            return this;
+        },
+        save: function(event) {
+            var self = this;
+
+            this.model.save({
+                name: this.$('[name=name]').val()
+            }, {
+                success: function() {
+                    self.onSave();
+                    self.remove();
+                },
+                error: function(collection, response) {
+                    App.Error.modal("Could not save Transition", response.responseText);
                 }
             });
 
