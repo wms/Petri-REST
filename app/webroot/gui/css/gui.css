@@ -62,6 +62,16 @@ html, body {
     background-color: red;
     font-color: white;
 }
+
+.workflow-editor .canvas .transition {
+    margin-left: -16px;
+    width: 32px;
+    margin-top: -16px;
+    height: 32px;
+    background-color: green;
+    font-color: white;
+}
+
 .workflow-editor .canvas .place p.title {
     position: relative;
     top: -24px;
