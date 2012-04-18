@@ -115,16 +115,16 @@ define([
                             orientation: 'right'
                         });
                         if(transitionEditWindow) {
-                            grid.disableItemEvents();
+                            grid.showOverlay();
                             var editTransitionForm = new TransitionEditForm({
                                 el: transitionEditWindow.el,
                                 model: this.model,
                                 cancel: function() {
-                                    grid.enableItemEvents();
+                                    grid.hideOverlay();
                                     transitionEditWindow.remove();
                                 },
                                 onSave: function() {
-                                    grid.enableItemEvents();
+                                    grid.hideOverlay();
                                     transitionEditWindow.remove();
                                 }
                             });
