@@ -1,27 +1,30 @@
 define([
     'Underscore',
-    'Backbone',
+    'BackboneRelational',
+    'models/place',
     'collections/places',
     'collections/transitions',
     'collections/arcs',
-], function(_, Backbone, placesCollection, transitionsCollection, arcsCollection) {
-    var workflowsModel = Backbone.Model.extend({
+], function(_, Backbone, placeModel, placesCollection, transitionsCollection, arcsCollection) {
+    var workflowsModel = Backbone.RelationalModel.extend({
         urlRoot: '/pr/workflows',
         idAttribute: '_id',
+        relations: [{
+            type: Backbone.HasMany,
+            key: 'places',
+            relatedModel: placeModel,
+        }],
 
         initialize: function(options) {
             _.bindAll(this, 'prepare_revert', 'revert');
             this.prepare_revert();
-
-            if(options.fetchChildren) {
-                this.places = new placesCollection;
-                this.transitions = new transitionsCollection;
-                this.arcs = new arcsCollection;
-            }
         },
         
         parse: function(response) {
-            return response.workflow;
+            if(this.collection) {
+                return response.workflow;
+            }
+            return response;
         },
 
         disable: function(options) {

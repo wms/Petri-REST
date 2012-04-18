@@ -17,23 +17,24 @@ define([
 
         render: function() {
             var self = this;
-            this.el.empty();
+            this.$el.empty();
 
+            foo = this.collection;
             if(this.collection.length) {
                 this.collection.each(function(workflow) {
                     var item = new workflowListItemView({model: workflow});
-                    self.el.append(item.render().el);
+                    self.$el.append(item.render().$el);
                 });
             }
             else {
-                self.el.html(_.template(workflowListEmptyTemplate));
+                self.$el.html(_.template(workflowListEmptyTemplate));
             }
 
             return this;
         },
 
         error: function(collection, response) {
-            this.el.html(_.template(errorTemplate, JSON.parse(response.responseText)));
+            this.$el.html(_.template(errorTemplate, JSON.parse(response.responseText)));
         }
     });
 
@@ -65,10 +66,7 @@ define([
         },
 
         render: function() {
-            var c = _.template(workflowListItemTemplate, {
-                workflow: this.model.toJSON()
-            });
-            $(this.el).html(c);
+            this.$el.html(_.template(workflowListItemTemplate, this.model));
             return this;
         }
     });

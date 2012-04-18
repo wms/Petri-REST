@@ -1,9 +1,9 @@
-<h4><%= workflow.name %></h4>
+<h4><%= attributes.name ? attributes.name : 'No name' %></h4>
 <div class="row">
     <div class="span11">
         <p>
-            <% if(workflow.description){ %>
-                <% workflow.description; %>
+            <% if(attributes.description){ %>
+                <% attributes.description; %>
             <% } else { %>
                 <em>No description</em>
             <% } %>
@@ -11,7 +11,7 @@
     </div>
     <div class="span3" style="text-align:right;float:right">
         <a class="btn primary edit">Edit</a>
-        <% if(workflow.enabled) { %>
+        <% if(attributes.enabled) { %>
         <a class="btn disable" href="#">Disable</a>
         <% } else { %>
         <a class="btn enable" href="#">Enable</a>

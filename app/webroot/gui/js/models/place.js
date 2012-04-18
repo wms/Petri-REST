@@ -1,8 +1,9 @@
 define([
     'Underscore',
-    'Backbone',
+    'BackboneRelational',
 ], function(_, Backbone) {
-    var placeModel = Backbone.Model.extend({
+    var placeModel = Backbone.RelationalModel.extend({
+        urlRoot: '/pr/places',
         idAttribute: '_id',
 
         parse: function(response) {

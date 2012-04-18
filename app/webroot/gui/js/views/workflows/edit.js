@@ -19,40 +19,36 @@ define([
         },
 
         initialize: function() {
+            this.gridView = new UIGridPanel({
+                el: $('.canvas', this.$el)
+            });
 
+            this.gridView.addItems({
+                places: this.model.places,
+                transitions: this.model.transitions
+            });
+
+            a = this.model;
             this.model.bind('change', this.render, this);
-            this.model.places.bind('all', this.renderPlaces, this);
-            this.model.transitions.bind('all', this.renderTransitions, this);
-
             this.model.fetch();
+            this.model.fetchRelated('places');
         },
 
         render: function() {
+            console.debug('render');
             var c = _.template(workflowEditTemplate, {
                 workflow: this.model.toJSON()
             });
 
-            this.el.html(c);
-
-            this.gridView = new UIGridPanel({
-                el: $('.canvas', this.el)
-            });
-
-            this.model.places.fetch({
-                data: { workflow_id: this.model.id }
-            });
-            this.model.transitions.fetch({
-                data: { workflow_id: this.model.id }
-            });
+            this.$el.html(c);
 
             return this;
         },
 
         // @todo: refactor
         renderPlaces: function() {
-            var grid = this.gridView
-                .clear();
-
+            /*
+            var grid = this.gridView;
             this.model.places.each(function(place) {
                 var el = this.el;
                 grid.addItem({
@@ -90,10 +86,13 @@ define([
                     }
                 });
             }, this);
+            */
         },
 
         renderTransitions: function() {
-            var grid = this.gridView;
+                               /*
+            var grid = this.gridView
+                .clear('transitions');
 
             this.model.transitions.each(function(transition) {
                 console.debug(transition);
@@ -132,6 +131,7 @@ define([
                     }
                 });
             }, this);
+            */
         },
 
         addPlace: function() {
@@ -162,8 +162,8 @@ define([
             this.cancel = options.cancel || function() {};
             this.onSave = options.onSave || function() {};
 
-            this.el = $('<div />')
-                .appendTo(this.el)
+            this.$el = $('<div />')
+                .appendTo(this.$el)
                 .addClass('place-edit-form');
 
             this.delegateEvents();
@@ -173,7 +173,7 @@ define([
             var c = _.template(placeEditFormTemplate, {
                 place: this.model.attributes
             });
-            this.el.html(c); 
+            this.$el.html(c); 
             return this;
         },
         save: function(event) {
@@ -213,8 +213,8 @@ define([
             this.cancel = options.cancel || function() {};
             this.onSave = options.onSave || function() {};
 
-            this.el = $('<div />')
-                .appendTo(this.el)
+            this.$el = $('<div />')
+                .appendTo(this.$el)
                 .addClass('transition-edit-form');
 
             this.delegateEvents();
@@ -224,7 +224,7 @@ define([
             var c = _.template(placeEditFormTemplate, {
                 place: this.model.attributes
             });
-            this.el.html(c); 
+            this.$el.html(c); 
             return this;
         },
         save: function(event) {

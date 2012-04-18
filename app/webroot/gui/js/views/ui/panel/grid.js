@@ -36,6 +36,15 @@ define([
             this.setPosition(item);
             this.items.push(item);
         },
+        addItems: function(items) {
+            /*
+            _.each(items, function(item, name) {
+                item.bind('all', function() {
+                    console.debug(this);
+                });
+            });
+            */
+        },
         clear: function() {
             this.el.empty();
             this.items.length = 0;
