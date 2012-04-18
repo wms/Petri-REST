@@ -16,3 +16,6 @@
 [submodule "libraries/backbone.modelbinding"]
 	path = libraries/backbone.modelbinding
 	url = https://github.com/derickbailey/backbone.modelbinding.git
+[submodule "libraries/backbone-relational"]
+	path = libraries/backbone-relational
+	url = git://github.com/PaulUithol/Backbone-relational.git
