@@ -58,6 +58,18 @@ define([
                 item.delegateEvents(item.events);
             });
             return this;
+        },
+        showOverlay: function() {
+            $('<div />')
+                .appendTo(this.el)
+                .addClass('overlay');
+
+            return this.disableItemEvents();
+        },
+        hideOverlay: function() {
+            $('.overlay', this.el).remove();
+
+            return this.enableItemEvents();
         }
     });
 

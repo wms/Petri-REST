@@ -66,16 +66,17 @@ define([
                             orientation: 'right'
                         });
                         if(placeEditWindow) {
-                            grid.disableItemEvents();
+                            grid.showOverlay();
+
                             var editPlaceForm = new PlaceEditForm({
                                 el: placeEditWindow.el,
                                 model: this.model,
                                 cancel: function() {
-                                    grid.enableItemEvents();
+                                    grid.hideOverlay();
                                     placeEditWindow.remove();
                                 },
                                 onSave: function() {
-                                    grid.enableItemEvents();
+                                    grid.hideOverlay();
                                     placeEditWindow.remove();
                                 }
                             });
