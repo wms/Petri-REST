@@ -13,6 +13,7 @@ define([
             );
 
             this.items = options.items;
+            this.itemViews = Array();
 
             _.each(this.items, function(item, index) {
                 this.items[index].collection.bind('change reset', function(event) {
@@ -34,13 +35,14 @@ define([
             var $el = $('.' + index, this.$el).empty();
 
             this.items[index].collection.each(function(item) {
-                var itemView = new UIGridItem(
+                this.itemViews.push(new UIGridItem(
                     _.extend(this.items[index].options, {
                         model: item,
                         el: $el,
                         grid: this
                     })
-                );
+                ));
+
             }, this);
         },
         addItem: function(options) {
@@ -134,8 +136,8 @@ define([
                 this.undelegateEvents();
                 // @todo: grid snapping
                 self.model.set('position', {
-                    x: (event.offsetX - 32) / 64,
-                    y: (event.offsetY - 32) / 64
+                    x: Math.round((event.offsetX - 32) / 64),
+                    y: Math.round((event.offsetY - 32) / 64)
                 });
                 self.model.save();
             }

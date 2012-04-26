@@ -75,8 +75,8 @@ html, body {
 .workflow-editor .canvas .ui-grid-item p.title {
     position: relative;
     top: -24px;
-    margin-left: -16px;
-    width: 64px;
+    margin-left: -48px;
+    width: 128px;
     text-align: center;
     min-height: 1px;
 }
