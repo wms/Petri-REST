@@ -21,7 +21,6 @@ define([
 
             var workflow = new workflowsModel({
                 _id: id,
-                fetchChildren: true
             });
 
             var panel = new UIPanel({

@@ -8,9 +8,18 @@ define([
     'text!templates/workflows/editor/place.html',
     'text!templates/workflows/editor/place/edit.html',
     'text!templates/workflows/editor/transition.html',
+    'text!templates/workflows/editor/transition/edit.html',
     'text!templates/common/error.html'
-], function($, _, Backbone, UIGridPanel, UIFloatingPanel, workflowEditTemplate, workflowPlaceTemplate, placeEditFormTemplate, workflowTransitionTemplate, errorTemplate) {
-
+], function(
+    $, _, Backbone,
+    UIGridPanel, UIFloatingPanel, 
+    workflowEditTemplate,
+    workflowPlaceTemplate,
+    placeEditFormTemplate,
+    workflowTransitionTemplate,
+    transitionEditFormTemplate,
+    errorTemplate
+) {
     var workflowEditView = Backbone.View.extend({
         events: {
             "click .btn.add-place": 'addPlace',
@@ -19,121 +28,124 @@ define([
         },
 
         initialize: function() {
+            this.render();
+
+            var editPlace = function() {
+                var placeEditWindow = new UIFloatingPanel({
+                    el: $('<div>').appendTo(this.grid.$el),
+                    orientation: 'right'
+                });
+                if(placeEditWindow) {
+                    this.grid.showOverlay();
+                    var self = this;
+
+                    var editPlaceForm = new PlaceEditForm({
+                        el: placeEditWindow.el,
+                        model: self.model,
+                        cancel: function() {
+                            self.grid.hideOverlay();
+                            placeEditWindow.remove();
+                        },
+                        onSave: function() {
+                            self.grid.hideOverlay();
+                            placeEditWindow.remove();
+                        }
+                    });
+                }
+            }
+            var editTransition = function() {
+                var transitionEditWindow = new UIFloatingPanel({
+                    el: $('<div>').appendTo(this.grid.$el),
+                    orientation: 'right'
+                });
+                if(transitionEditWindow) {
+                    this.grid.showOverlay();
+                    var self = this;
+
+                    var editTransitionForm = new TransitionEditForm({
+                        el: transitionEditWindow.el,
+                        model: self.model,
+                        cancel: function() {
+                            self.grid.hideOverlay();
+                            transitionEditWindow.remove();
+                        },
+                        onSave: function() {
+                            self.grid.hideOverlay();
+                            transitionEditWindow.remove();
+                        }
+                    });
+                }
+            }
+
             this.gridView = new UIGridPanel({
-                el: $('.canvas', this.$el)
+                el: $('.canvas', this.$el),
+                items: {
+                    places: {
+                        collection: this.model.places,
+                        options: {
+                            menu: {
+                                wrench: {
+                                    label: 'Edit',
+                                    handler: editPlace
+                                },
+                                move: {
+                                    label: 'Move',
+                                    handler: 'move'
+                                },
+                                remove: {
+                                    label: 'Delete',
+                                    handler: 'destroy'
+                                }
+                            },
+                            render: function() {
+                                this.$el.html(_.template(workflowPlaceTemplate, {
+                                    place: this.model
+                                }));
+                                return this;
+                            }
+                        }
+                    },
+                    transitions: {
+                        collection: this.model.transitions,
+                        options: {
+                            menu: {
+                                wrench: {
+                                    label: 'Edit',
+                                    handler: editTransition
+                                },
+                                move: {
+                                    label: 'Move',
+                                    handler: 'move'
+                                },
+                                remove: {
+                                    label: 'Delete',
+                                    handler: 'destroy'
+                                }
+                            },
+                            render: function() {
+                                this.$el.html(_.template(workflowTransitionTemplate, {
+                                    transition: this.model
+                                }));
+                                return this;
+                            }
+                        }
+                    }
+                }
             });
 
-            this.gridView.addItems({
-                places: this.model.places,
-                transitions: this.model.transitions
-            });
-
-            a = this.model;
-            this.model.bind('change', this.render, this);
-            this.model.fetch();
-            this.model.fetchRelated('places');
+            this.model.bind('reset', this.render, this);
+            this.model.fetch({children: true});
         },
 
         render: function() {
-            console.debug('render');
             var c = _.template(workflowEditTemplate, {
-                workflow: this.model.toJSON()
+                workflow: this.model
             });
 
             this.$el.html(c);
 
             return this;
         },
-
-        // @todo: refactor
-        renderPlaces: function() {
-            /*
-            var grid = this.gridView;
-            this.model.places.each(function(place) {
-                var el = this.el;
-                grid.addItem({
-                    model: place,
-                    events: {
-                        "click": 'editPlace'
-                    },
-                    render: function() {
-                        var c = _.template(workflowPlaceTemplate, {
-                            place: place.attributes,
-                        });
-                        this.el.append(c);
-                    },
-                    editPlace: function() {
-                        var placeEditWindow = new UIFloatingPanel({
-                            el: grid.el,
-                            orientation: 'right'
-                        });
-                        if(placeEditWindow) {
-                            grid.showOverlay();
-
-                            var editPlaceForm = new PlaceEditForm({
-                                el: placeEditWindow.el,
-                                model: this.model,
-                                cancel: function() {
-                                    grid.hideOverlay();
-                                    placeEditWindow.remove();
-                                },
-                                onSave: function() {
-                                    grid.hideOverlay();
-                                    placeEditWindow.remove();
-                                }
-                            });
-                        }
-                    }
-                });
-            }, this);
-            */
-        },
-
-        renderTransitions: function() {
-                               /*
-            var grid = this.gridView
-                .clear('transitions');
-
-            this.model.transitions.each(function(transition) {
-                console.debug(transition);
-                var el = this.el;
-                grid.addItem({
-                    model: transition,
-                    events: {
-                        "click": 'editTransition'
-                    },
-                    render: function() {
-                        var c = _.template(workflowTransitionTemplate, {
-                            transition: transition.attributes,
-                        });
-                        this.el.append(c);
-                    },
-                    editTransition: function() {
-                        var transitionEditWindow = new UIFloatingPanel({
-                            el: grid.el,
-                            orientation: 'right'
-                        });
-                        if(transitionEditWindow) {
-                            grid.showOverlay();
-                            var editTransitionForm = new TransitionEditForm({
-                                el: transitionEditWindow.el,
-                                model: this.model,
-                                cancel: function() {
-                                    grid.hideOverlay();
-                                    transitionEditWindow.remove();
-                                },
-                                onSave: function() {
-                                    grid.hideOverlay();
-                                    transitionEditWindow.remove();
-                                }
-                            });
-                        }
-                    }
-                });
-            }, this);
-            */
-        },
-
         addPlace: function() {
             this.model.places.create({
                 workflow_id: this.model.id
@@ -162,9 +174,10 @@ define([
             this.cancel = options.cancel || function() {};
             this.onSave = options.onSave || function() {};
 
-            this.$el = $('<div />')
+            this.setElement($('<div />')
                 .appendTo(this.$el)
-                .addClass('place-edit-form');
+                .addClass('place-edit-form')
+            );
 
             this.delegateEvents();
             this.render();
@@ -221,8 +234,8 @@ define([
             this.render();
         },
         render: function() {
-            var c = _.template(placeEditFormTemplate, {
-                place: this.model.attributes
+            var c = _.template(transitionEditFormTemplate, {
+                transition: this.model.attributes
             });
             this.$el.html(c); 
             return this;

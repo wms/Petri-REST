@@ -1,27 +1,31 @@
 define([
+    'jQuery',
     'Underscore',
-    'BackboneRelational',
+    'Backbone',
     'models/place',
     'collections/places',
     'collections/transitions',
     'collections/arcs',
-], function(_, Backbone, placeModel, placesCollection, transitionsCollection, arcsCollection) {
-    var workflowsModel = Backbone.RelationalModel.extend({
+], function($, _, Backbone, placeModel, placesCollection, transitionsCollection, arcsCollection) {
+    var workflowsModel = Backbone.Model.extend({
         urlRoot: '/pr/workflows',
         idAttribute: '_id',
-        relations: [{
-            type: Backbone.HasMany,
-            key: 'places',
-            relatedModel: placeModel,
-        }],
 
         initialize: function(options) {
+            this.places = new placesCollection();
+            this.transitions = new transitionsCollection();
+            this.arcs = new arcsCollection();
+
+            this.places.url      = '/pr/workflows/' + this.id + '/places';
+            this.transitions.url = '/pr/workflows/' + this.id + '/transitions';
+            this.arcs.url        = '/pr/workflows/' + this.id + '/arcs';
+
             _.bindAll(this, 'prepare_revert', 'revert');
             this.prepare_revert();
         },
         
         parse: function(response) {
-            if(this.collection) {
+            if(response.workflow) {
                 return response.workflow;
             }
             return response;
@@ -55,6 +59,27 @@ define([
             this.trigger('save', this);
 
             result = Backbone.Model.prototype.save.call(this, attributes, options);
+            return result;
+        },
+
+        fetch: function(options) {
+            var self = this;
+
+            result = Backbone.Model.prototype.fetch.call(this, {
+                success: function() {
+                    if(options.children) {
+                        $.when(
+                            self.places.fetch(),
+                            self.transitions.fetch()
+                        ).done(function() {
+                            options.success ? options.success() : null;
+                        })
+                    }
+                    else {
+                        return options.success ? options.success() : true;
+                    }
+                }
+            });
             return result;
         },
 

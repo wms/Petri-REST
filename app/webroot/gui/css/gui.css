@@ -80,8 +80,12 @@ html, body {
     text-align: center;
     min-height: 1px;
 }
-.workflow-editor .edit-place {
-    padding-top: 16px;
+.workflow-editor .ui-floating-panel {
     margin: 16px 16px 0 0;
     background-color: white;
+}
+
+.workflow-editor .ui-floating-panel form,
+.workflow-editor .ui-floating-panel .form-actions {
+    margin: 0;
 }
