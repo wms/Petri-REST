@@ -40,6 +40,14 @@ Router::connect('/{:controller}', array(
     'action' => 'add',
     'type' => 'json'
 ));
+Router::connect('/workflows/{:workflow_id:[0-9a-f]{24}}/{:controller}', array(
+    'http:method' => 'POST',
+    'action' => 'add',
+    'type' => 'json'
+), function($request) {
+    $request->data['workflow_id'] = $request->params['workflow_id'];
+    return $request;
+});
 Router::connect('/{:controller}/{:id:[0-9a-f]{24}}', array(
     'http:method' => 'GET',
     'action' => 'view',
