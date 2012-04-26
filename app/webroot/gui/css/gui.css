@@ -29,6 +29,8 @@ html, body {
 .ui-floating-panel {
     width: 50%;
     height: 100%;
+    position: relative;
+    z-index: 20;
 }
 .ui-floating-panel.orientation-right {
     float: right;
@@ -45,6 +47,13 @@ html, body {
     position: absolute;
     cursor: pointer;
 }
+.workflow-editor .ui-grid-panel .overlay {
+    position: absolute;
+    background: rgba(0,0,0,0.7);
+    width: 100%;
+    height: 100%;
+    z-index: 10;
+}
 .workflow-editor .canvas .place {
     margin-left: -16px;
     width: 32px;
@@ -53,13 +62,30 @@ html, body {
     background-color: red;
     font-color: white;
 }
-.workflow-editor .canvas .place p.title {
+
+.workflow-editor .canvas .transition {
+    margin-left: -16px;
+    width: 32px;
+    margin-top: -16px;
+    height: 32px;
+    background-color: green;
+    font-color: white;
+}
+
+.workflow-editor .canvas .ui-grid-item p.title {
     position: relative;
     top: -24px;
     margin-left: -16px;
     width: 64px;
     text-align: center;
+    min-height: 1px;
 }
-.workflow-editor .edit-place {
-    margin-top: 16px;
+.workflow-editor .ui-floating-panel {
+    margin: 16px 16px 0 0;
+    background-color: white;
+}
+
+.workflow-editor .ui-floating-panel form,
+.workflow-editor .ui-floating-panel .form-actions {
+    margin: 0;
 }

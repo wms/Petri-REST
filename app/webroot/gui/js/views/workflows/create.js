@@ -18,7 +18,7 @@ define([
                 name: this.$('[name=name]').val()
             }, {
                 success: function(collection, response) {
-                    $('form', self.el)[0].reset();
+                    $('form', self.$el)[0].reset();
                 },
                 error: function(collection, response) {
                     App.Error.modal('Could not create Workflow', response.responseText);
@@ -28,7 +28,7 @@ define([
 
         render: function() {
             var compiledTemplate = _.template(workflowCreateTemplate);
-            this.el.html(compiledTemplate);
+            this.$el.html(compiledTemplate);
         }
     });
 
