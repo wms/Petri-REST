@@ -157,8 +157,34 @@ define([
             });
         },
         addArc: function() {
-            this.model.arcs.create({
-                workflow_id: this.model.id
+            var data = {},
+                self = this;
+
+            var setInput = function() {
+                _.each(this.grid.itemViews, function(item) {
+                    item.delegateEvents({
+                        'click': setOutput
+                    })
+                });
+                var type = this.$el.parent().attr('class');
+                data['input'] = {};
+                data['input'][type + '_id'] = this.model.id;
+            }
+            var setOutput = function() {
+                _.each(this.grid.itemViews, function(item) {
+                    item.delegateEvents();
+                });
+                var type = this.$el.parent().attr('class');
+                data['output'] = {};
+                data['output'][type + '_id'] = this.model.id;
+
+                self.model.arcs.create(data);
+            }
+
+            _.each(this.gridView.itemViews, function(item) {
+                item.delegateEvents({
+                    'click': setInput
+                })
             });
         },
     });
