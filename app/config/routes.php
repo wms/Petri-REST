@@ -30,6 +30,11 @@ Router::connect('/{:controller}', array(
     'action' => 'index',
     'type' => 'json'
 ));
+Router::connect('/workflows/{:workflow_id:[0-9a-f]{24}}/{:controller}', array(
+    'http:method' => 'GET',
+    'action' => 'index',
+    'type' => 'json'
+));
 Router::connect('/{:controller}', array(
     'http:method' => 'POST',
     'action' => 'add',
