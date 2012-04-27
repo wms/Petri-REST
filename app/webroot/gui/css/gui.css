@@ -42,11 +42,13 @@ html, body {
 .workflow-editor .ui-grid-panel {
     height: 350px;
     position: relative;
+    z-index: 1;
 }
 .workflow-editor .ui-grid-panel .ui-grid-item {
     position: absolute;
     cursor: pointer;
 }
+
 .workflow-editor .ui-grid-panel .overlay {
     position: absolute;
     background: rgba(0,0,0,0.7);
@@ -54,7 +56,7 @@ html, body {
     height: 100%;
     z-index: 10;
 }
-.workflow-editor .canvas .place {
+.workflow-editor .canvas .ui-grid-item .place {
     margin-left: -16px;
     width: 32px;
     margin-top: -16px;
@@ -63,7 +65,7 @@ html, body {
     font-color: white;
 }
 
-.workflow-editor .canvas .transition {
+.workflow-editor .canvas .ui-grid-item .transition {
     margin-left: -16px;
     width: 32px;
     margin-top: -16px;
@@ -80,6 +82,15 @@ html, body {
     text-align: center;
     min-height: 1px;
 }
+
+.workflow-editor .canvas .ui-grid-item.line {
+    -moz-transform-origin: 0 100%;
+    -webkit-transform-origin: 0 100%;
+    height: 3px;
+    background: black;
+    z-index: -1;
+}
+
 .workflow-editor .ui-floating-panel {
     margin: 16px 16px 0 0;
     background-color: white;

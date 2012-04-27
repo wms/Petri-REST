@@ -20,10 +20,6 @@ define([
                     this.renderItems(index);
                 }, this);
 
-                this.items[index].collection.bind('add', function(event) {
-                    this.addItem(index);
-                }, this);
-
                 $('<div />')
                     .addClass(index)
                     .appendTo(this.$el);
@@ -37,6 +33,7 @@ define([
             this.items[index].collection.each(function(item) {
                 this.itemViews.push(new UIGridItem(
                     _.extend(this.items[index].options, {
+                        type: index,
                         model: item,
                         el: $el,
                         grid: this
@@ -80,8 +77,12 @@ define([
             return _.defaults(result, defaults);
         },
         initialize: function(options) {
+            var defaults = {
+                autoRender: true
+            }
+
             // Apply passed-in attributes
-            for(var key in options) {
+            for(var key in _.defaults(options, defaults)) {
                 this[key] = options[key];
             };
 
@@ -92,8 +93,10 @@ define([
                     .addClass('ui-grid-item')
             );
 
-            this.setPosition()
-                .render();
+            if(this.autoRender) {
+                this.setPosition()
+                    .render();
+            }
         },
         setPosition: function(position) {
             var position = _.defaults(
