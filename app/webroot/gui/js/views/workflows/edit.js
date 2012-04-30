@@ -10,7 +10,6 @@ define([
     'text!templates/workflows/editor/transition.html',
     'text!templates/workflows/editor/transition/edit.html',
     'text!templates/common/error.html',
-    'lib/inflection'
 ], function(
     $, _, Backbone,
     UIGridPanel, UIFloatingPanel, 
