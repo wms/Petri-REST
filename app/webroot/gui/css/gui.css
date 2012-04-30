@@ -58,29 +58,34 @@ html, body {
 }
 .workflow-editor .canvas .ui-grid-item .place {
     margin-left: -16px;
-    width: 32px;
+    width: 28px;
+    height: 28px;
     margin-top: -16px;
-    height: 32px;
-    background-color: red;
+    background-color: lightblue;
     font-color: white;
+    border-radius: 16px;
+    border: 2px solid black;
 }
 
 .workflow-editor .canvas .ui-grid-item .transition {
     margin-left: -16px;
-    width: 32px;
+    width: 20px;
+    height: 28px;
     margin-top: -16px;
-    height: 32px;
-    background-color: green;
-    font-color: white;
+    background-color: pink;
+    border: 2px solid black;
 }
 
 .workflow-editor .canvas .ui-grid-item p.title {
     position: relative;
     top: -24px;
-    margin-left: -48px;
-    width: 128px;
+    margin-left: -18px;
+    width: 64px;
     text-align: center;
     min-height: 1px;
+    background-color: rgba(255,255,255,0.9);
+    outline: 1px solid lightgray;
+    color: black;
 }
 
 .workflow-editor .canvas .ui-grid-item.line {
