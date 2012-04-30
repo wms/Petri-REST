@@ -19,3 +19,6 @@
 [submodule "libraries/backbone-relational"]
 	path = libraries/backbone-relational
 	url = git://github.com/PaulUithol/Backbone-relational.git
+[submodule "libraries/li3_fixtures"]
+	path = libraries/li3_fixtures
+	url = https://github.com/daschl/li3_fixtures.git

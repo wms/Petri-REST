@@ -42,6 +42,10 @@ use lithium\action\Dispatcher;
 Dispatcher::applyFilter('run', function($self, $params, $chain) {
 	Environment::set($params['request']);
 
+    if(\lithium\core\Environment::is('test')) {
+        Libraries::add('li3_fixtures');
+    }
+
 	foreach (array_reverse(Libraries::get()) as $name => $config) {
 		if ($name === 'lithium') {
 			continue;
