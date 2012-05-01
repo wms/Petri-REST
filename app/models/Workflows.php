@@ -33,34 +33,41 @@ class Workflows extends \lithium\data\Model {
         ));
     }
 
-    public static function createPlace($workflow, array $options = array()) {
-        if($workflow->exists() && $options['place']) {
-            if(gettype($options['place']) != 'array') {
-                $options['place'] = $options['place']->to('array');
+    public static function createPlace($workflow, $place, array $options = array()) {
+        if($workflow->exists()) {
+            $place['workflow_id'] = $workflow->_id;
+
+            $newPlace = Place::create($place);
+
+            if($newPlace->save()) {
+                return $newPlace;
             }
-
-            $options['place']['workflow_id'] = $workflow->_id;
-
-            $place = Place::create($options['place']);
-            $place->save();
-
-            return $place;
         }
         return false;
     }
 
-    public static function createTransition($workflow, array $options = array()) {
-        if($workflow->exists() && $options['transition']) {
-            if(gettype($options['transition']) != 'array') {
-                $options['transition'] = $options['transition']->to('array');
+    public static function createTransition($workflow, $transition, array $options = array()) {
+        if($workflow->exists()) {
+            $transition['workflow_id'] = $workflow->_id;
+
+            $newTransition = Transition::create($transition);
+
+            if($newTransition->save()) {
+                return $newTransition;
             }
+        }
+        return false;
+    }
 
-            $options['transition']['workflow_id'] = $workflow->_id;
+    public static function createArc($workflow, $arc = null, array $options = array()) {
+        if($workflow->exists()) {
+            $arc['workflow_id'] = $workflow->_id;
 
-            $transition = Transition::create($options['transition']);
-            $transition->save();
+            $newArc = Arc::create($arc);
 
-            return $transition;
+            if($newArc->save($arc)) {
+                return $newArc;
+            }
         }
         return false;
     }

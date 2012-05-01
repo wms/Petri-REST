@@ -8,7 +8,16 @@ use app\models\Workflows;
 
 class WorkflowsTest extends \lithium\test\Unit {
 
-	public function setUp() {}
+    public function setUp() {
+        $this->workflow = Workflows::create();
+
+        $this->fixture = array(
+            'workflow'   => Fixture::load('Workflow'),
+            'place'      => Fixture::load('Place'),
+            'transition' => Fixture::load('Transition'),
+            'arc'        => Fixture::load('Arc')
+        );
+    }
 
     /**
     * Test that a Workflow cannot be enabled when no start Place is set
@@ -16,75 +25,76 @@ class WorkflowsTest extends \lithium\test\Unit {
     public function testEnableWithNoStartPlace() {
         $fixture = Fixture::load('Workflow');
 
-        $workflow = Workflows::create($fixture->first());
+        $this->workflow->save($this->fixture['workflow']->first());
 
-        $this->assertFalse($workflow->enable());
+        $this->assertFalse($this->workflow->enable());
     }
 
     /**
      * Test that a Workflow will not create Places until it has been saved
      */
     public function testAddPlaceBeforeSave() {
-        $fixture = array(
-            'place'    => Fixture::load('Place'),
-            'workflow' => Fixture::load('Workflow')
-        );
-
-        $workflow = Workflows::create($fixture['workflow']->first());
-
-        $this->assertFalse(
-            $workflow->createPlace(array('place' => $fixture['place']))
-        );
+        $place = $this->workflow->createPlace($this->fixture['place']->first());
+        $this->assertFalse($place);
     }
 
     /**
      * Test that a Workflow will create Places once it has been saved
      */
     public function testAddPlaceAfterSave() {
-        $fixture = array(
-            'place'    => Fixture::load('Place'),
-            'workflow' => Fixture::load('Workflow')
-        );
+        $this->workflow->save($this->fixture['workflow']->first());
 
-        $workflow = Workflows::create($fixture['workflow']->first());
-        $workflow->save();
+        $place = $this->workflow->createPlace($this->fixture['place']->first());
 
-        $place = $workflow->createPlace(array('place' => $fixture['place']));
-
-        $this->assertTrue($place->exists());
+        $this->assertTrue($place && $place->exists());
     }
 
     /**
      * Test that a Workflow will not create Transitions until it has been saved
      */
     public function testAddTransitionBeforeSave() {
-        $fixture = array(
-            'transition' => Fixture::load('Transition'),
-            'workflow'   => Fixture::load('Workflow')
-        );
+        $transition = $this->workflow->createTransition($this->fixture['transition']->first());
 
-        $workflow = Workflows::create($fixture['workflow']->first());
-
-        $this->assertFalse(
-            $workflow->createTransition(array('transition' => $fixture['transition']))
-        );
+        $this->assertFalse($transition);
     }
 
     /**
      * Test that a Workflow will create Transitions once it has been saved
      */
     public function testAddTransitionAfterSave() {
-        $fixture = array(
-            'transition' => Fixture::load('Transition'),
-            'workflow'   => Fixture::load('Workflow')
+        $this->workflow->save($this->fixture['workflow']->first());
+
+        $transition = $this->workflow->createTransition($this->fixture['transition']->first());
+
+        $this->assertTrue($transition && $transition->exists());
+    }
+
+    /**
+     * Test that a Workflow will not create an Arc until it has been saved
+     */
+    public function testAddArcBeforeSave() {
+        $arc = $this->workflow->createArc($this->fixture['arc']->first());
+
+        $this->assertFalse($arc);
+    }
+
+    /**
+     * Test that a Workflow will create Arcs once it has been saved
+     */
+    public function testAddArcAfterSave() {
+        $this->workflow->save($this->fixture['workflow']->first());
+
+        $place = $this->workflow->createPlace($this->fixture['place']->first());
+        $transition = $this->workflow->createTransition($this->fixture['transition']->first());
+
+        $arc = $this->workflow->createArc(
+            $this->fixture['arc']->first() + array(
+                'input' => $place,
+                'output' => $transition
+            )
         );
 
-        $workflow = Workflows::create($fixture['workflow']->first());
-        $workflow->save();
-
-        $transition = $workflow->createTransition(array('transition' => $fixture['transition']));
-
-        $this->assertTrue($transition->exists());
+        $this->assertTrue($arc && $arc->exists());
     }
 }
 
