@@ -20,10 +20,6 @@ define([
                     this.renderItems(index);
                 }, this);
 
-                this.items[index].collection.bind('add', function(event) {
-                    this.addItem(index);
-                }, this);
-
                 $('<div />')
                     .addClass(index)
                     .appendTo(this.$el);
@@ -37,6 +33,7 @@ define([
             this.items[index].collection.each(function(item) {
                 this.itemViews.push(new UIGridItem(
                     _.extend(this.items[index].options, {
+                        type: index,
                         model: item,
                         el: $el,
                         grid: this
@@ -45,11 +42,10 @@ define([
 
             }, this);
         },
-        addItem: function(options) {
-        },
-        addItems: function(items) {
-        },
-        clear: function() {
+        allItems: function(callback) {
+            _.each(this.itemViews, function(item) {
+                callback.call(item);
+            });
         },
         showOverlay: function() {
             $('<div />')
@@ -81,8 +77,12 @@ define([
             return _.defaults(result, defaults);
         },
         initialize: function(options) {
+            var defaults = {
+                autoRender: true
+            }
+
             // Apply passed-in attributes
-            for(var key in options) {
+            for(var key in _.defaults(options, defaults)) {
                 this[key] = options[key];
             };
 
@@ -93,8 +93,10 @@ define([
                     .addClass('ui-grid-item')
             );
 
-            this.setPosition()
-                .render();
+            if(this.autoRender) {
+                this.setPosition()
+                    .render();
+            }
         },
         setPosition: function(position) {
             var position = _.defaults(
@@ -110,6 +112,10 @@ define([
             return this;
         },
         showMenu: function(event) {
+            this.grid.allItems(function() {
+                this.hideMenu();
+            });
+
             //@todo: refactor context menu
             if(!this.$dropdown) {
                 this.$el.addClass('dropdown');
@@ -123,12 +129,16 @@ define([
                 this.$dropdown.appendTo(this.$el);
             }
 
+            foo = this.$dropdown;
             this.$dropdown.dropdown('toggle');
 
             return false;
         },
-        move: function() {
+        hideMenu: function() {
             this.$el.removeClass('open');
+        },
+        move: function() {
+            this.hideMenu();
 
             var self = this;
             var moveItemTo = function(event) {
@@ -140,7 +150,17 @@ define([
                     y: Math.round((event.offsetY - 32) / 64)
                 });
                 self.model.save();
+                self.grid.allItems(this.delegateEvents);
             }
+
+            this.grid.allItems(function() {
+                this.delegateEvents({
+                    'click': function(event) {
+                        event.stopPropagation();
+                    }
+                });
+            });
+
             this.grid.delegateEvents({
                 'click': moveItemTo
             });

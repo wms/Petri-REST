@@ -9,7 +9,7 @@ define([
     'text!templates/workflows/editor/place/edit.html',
     'text!templates/workflows/editor/transition.html',
     'text!templates/workflows/editor/transition/edit.html',
-    'text!templates/common/error.html'
+    'text!templates/common/error.html',
 ], function(
     $, _, Backbone,
     UIGridPanel, UIFloatingPanel, 
@@ -80,7 +80,7 @@ define([
             this.gridView = new UIGridPanel({
                 el: $('.canvas', this.$el),
                 items: {
-                    places: {
+                    place: {
                         collection: this.model.places,
                         options: {
                             menu: {
@@ -105,7 +105,7 @@ define([
                             }
                         }
                     },
-                    transitions: {
+                    transition: {
                         collection: this.model.transitions,
                         options: {
                             menu: {
@@ -129,11 +129,42 @@ define([
                                 return this;
                             }
                         }
+                    },
+                    arc: {
+                        collection: this.model.arcs,
+                        options: {
+                            render: function() {
+                                var x1 = this.model.get('input').get('position').x * 64 + 32,
+                                    y1 = this.model.get('input').get('position').y * 64 + 32,
+                                    x2 = this.model.get('output').get('position').x * 64 + 32,
+                                    y2 = this.model.get('output').get('position').y * 64 + 32;
+
+                                var length = Math.sqrt((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
+                                var angle  = Math.atan2(y2 - y1, x2 - x1) * 180 / Math.PI;
+                                var transform = 'rotate('+angle+'deg)';
+
+                                this.$el
+                                    .addClass('line')
+                                    .css({
+                                        '-moz-transform': transform,
+                                        '-webkit-transform': transform,
+                                        'top': y1,
+                                        'left': x1,
+                                        'width': length
+                                    })
+                            }
+                        }
                     }
                 }
             });
 
-            this.model.bind('reset', this.render, this);
+            this.model.bind('change reset', this.render, this);
+            this.model.places.on('change', function() {
+                this.model.arcs.trigger('change')
+            }, this);
+            this.model.transitions.on('change', function() {
+                this.model.arcs.trigger('change')
+            }, this);
             this.model.fetch({children: true});
         },
 
@@ -161,30 +192,31 @@ define([
                 self = this;
 
             var setInput = function() {
-                _.each(this.grid.itemViews, function(item) {
-                    item.delegateEvents({
+                self.gridView.allItems(function() {
+                    this.delegateEvents({
                         'click': setOutput
-                    })
+                    });
                 });
                 var type = this.$el.parent().attr('class');
                 data['input'] = {};
-                data['input'][type + '_id'] = this.model.id;
+                data['input'][type] = this.model;
             }
             var setOutput = function() {
-                _.each(this.grid.itemViews, function(item) {
-                    item.delegateEvents();
+                self.gridView.allItems(function() {
+                    this.delegateEvents();
                 });
+
                 var type = this.$el.parent().attr('class');
                 data['output'] = {};
-                data['output'][type + '_id'] = this.model.id;
+                data['output'][type] = this.model;
 
                 self.model.arcs.create(data);
             }
 
-            _.each(this.gridView.itemViews, function(item) {
-                item.delegateEvents({
+            this.gridView.allItems(function() {
+                this.delegateEvents({
                     'click': setInput
-                })
+                });
             });
         },
     });
