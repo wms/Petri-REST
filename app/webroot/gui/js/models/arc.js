@@ -6,6 +6,8 @@ define([
 
         save: function(attributes, options) {
             attributes = attributes || {};
+            options.wait = true;
+
             // @todo: refactor
             if(this.attributes.input) {
                 attributes.input = _.map(this.attributes.input, function(input, type) {

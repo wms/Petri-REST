@@ -210,7 +210,11 @@ define([
                 data['output'] = {};
                 data['output'][type] = this.model;
 
-                self.model.arcs.create(data);
+                self.model.arcs.create(data, {
+                    error: function(arc) {
+                        arc.destroy();
+                    }
+                });
             }
 
             this.gridView.allItems(function() {
