@@ -27,7 +27,9 @@ class ArcsController extends \lithium\action\Controller {
 		$arc = Arc::create();
 
 		if ($this->request->data) {
-		   	$arc->save($this->request->data);
+			if(!$arc->save($this->request->data)) {
+				$this->response->status(400);
+			}
 		}
 		return compact('arc');
 	}

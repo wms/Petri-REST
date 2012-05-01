@@ -17,28 +17,28 @@ class ArcsControllerTest extends \lithium\test\Unit {
         );
 
         $this->workflow = \app\models\Workflows::create();
+        $this->workflow->save($this->fixture['workflow']->first());
+
+        $this->place = $this->workflow->createPlace(
+            $this->fixture['place']->first()
+        );
+
+        $this->transition = $this->workflow->createTransition(
+            $this->fixture['transition']->first()
+        );
+
     }
 
 	public function tearDown() {}
 
     public function testAdd() {
-        $this->workflow->save($this->fixture['workflow']->first());
-
-        $place = $this->workflow->createPlace(
-            $this->fixture['place']->first()
-        );
-
-        $transition = $this->workflow->createTransition(
-            $this->fixture['transition']->first()
-        );
-
         $data = array(
             'workflow_id' => $this->workflow->_id,
             'input' => array(
-                'place_id'=> $place->_id
+                'place_id'=> $this->place->_id
             ),
             'output' => array(
-                'transition_id'  => $transition->_id
+                'transition_id'  => $this->transition->_id
             )
         );
 
@@ -54,6 +54,26 @@ class ArcsControllerTest extends \lithium\test\Unit {
             $result['arc']->input->place_id       == $data['input']['place_id'] &&
             $result['arc']->output->transition_id == $data['output']['transition_id']
         );
+    }
+
+    public function testSetErrorOnAddValidationFail() {
+        $data = array(
+            'workflow_id' => $this->workflow->_id,
+            'input' => array(
+                'place_id'=> $this->place->_id
+            ),
+            'output' => array(
+                'place_id'  => $this->place->_id
+            )
+        );
+
+        $request = new Request();
+        $request->data = $data;
+
+        $controller = new ArcsController(compact('request'));
+        $controller->add();
+
+        $this->assertEqual(400, $controller->response->status['code']);
     }
 }
 
