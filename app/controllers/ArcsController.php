@@ -25,9 +25,11 @@ class ArcsController extends \lithium\action\Controller {
 
 	public function add() {
 		$arc = Arc::create();
-		$result = $arc->save($this->request->data);
 
-		return compact('result', 'arc');
+		if ($this->request->data) {
+		   	$arc->save($this->request->data);
+		}
+		return compact('arc');
 	}
 
 	public function edit() {
