@@ -2,9 +2,16 @@
     <fieldset>
         <legend>Edit Place</legend>
         <div class="control-group">
-            <label class="control-label" for="place-name">Name</label>
+            <label class="control-label" for="place-edit-name">Name</label>
             <div class="controls">
-                <input name="name" type="text" value="<%= place.name %>" />
+                <input id="place-edit-name" name="name" type="text" value="<%= place.name %>" />
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="place-edit-is_start">Start Place</label>
+            <div class="controls">
+                <input id="place-edit-is_start" name="is_start" type="checkbox" <%= place.is_start ?
+				'checked="checked"' : '' %> />
             </div>
         </div>
         <div class="form-actions">
