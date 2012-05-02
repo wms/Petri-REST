@@ -45,18 +45,23 @@ class Arc extends \lithium\data\Model {
 
     public function save($arc, $data = null, array $options = array()) {
         foreach(array('input', 'output') as $element) {
-            if($data[$element]
-                && is_object($data[$element])
-                && get_class($data[$element]) == "lithium\\data\\entity\\Document") {
-                    $type = static::_getElementType($data[$element]);
-
-                    $data[$element] = array(
-                        $type . '_id' => $data[$element]->_id
-                    );
-                }
+            if($data[$element]) {
+                $data[$element] = static::_replaceElementWithId($data[$element]);
+            }
         }
 
         return parent::save($arc, $data, $options);
+    }
+
+    private static function _replaceElementWithId($element) {
+        if(is_object($element) && get_class($element) == "lithium\\data\\entity\\Document") {
+            $type = static::_getElementType($element);
+
+            return array(
+                $type . '_id' => $element->_id
+            );
+        }
+        return $element;
     }
 
     private static function _getElementType($element) {
