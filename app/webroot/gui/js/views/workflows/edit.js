@@ -255,7 +255,8 @@ define([
             var self = this;
 
             this.model.save({
-                name: this.$('[name=name]').val()
+                name: this.$('[name=name]').val(),
+                is_start: this.$('[name=is_start]').is(':checked')
             }, {
                 success: function() {
                     self.onSave();

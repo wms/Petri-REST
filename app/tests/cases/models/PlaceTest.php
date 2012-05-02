@@ -35,6 +35,22 @@ class PlaceTest extends \lithium\test\Unit {
 
         $this->assertFalse($placeTwo->save($data));
     }
+
+    /**
+    * Test that subsequent saves on the Start Place do not trigger a validation error
+    */
+    public function testAdditionalSaveOnStartPlace() {
+        $this->workflow->save($this->fixture['workflow']->first());
+
+        $place = $this->workflow->createPlace($this->fixture['place']->first());
+        $data = array(
+            'is_start' => true
+        );
+
+        $place->save($data);
+
+        $this->assertTrue($place->save($data));
+    }
 }
 
 ?>

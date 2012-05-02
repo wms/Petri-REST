@@ -31,6 +31,7 @@ Validator::add('onlyOneInWorkflow', function($value, $format, $options) {
 	if($value) {
 		$count = Place::count(array(
 			'conditions' => array(
+                '_id' => array('$ne' => $options['values']['_id']),
 				'workflow_id' => $options['values']['workflow_id'],
 				'is_start' => true
 			)
