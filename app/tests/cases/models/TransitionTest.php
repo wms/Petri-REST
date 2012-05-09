@@ -68,10 +68,7 @@ class TransitionTest extends \lithium\test\Unit {
      * specified by Case
      */
     public function testCanFireByCase() {
-        $case = Cases::create();
-        $case->save($this->fixture['case']->first());
-
-        $this->workflow->startCase($case);
+        $case = $this->workflow->createCase($this->fixture['case']->first());
 
         $this->assertTrue(
             $this->transition->canFire(compact('case'))
@@ -83,10 +80,7 @@ class TransitionTest extends \lithium\test\Unit {
      * Place specified by Case.
      */
     public function testInputTokenConsumptionByCase() {
-        $case = Cases::create();
-        $case->save($this->fixture['case']->first());
-
-        $this->workflow->startCase($case);
+        $case = $this->workflow->createCase($this->fixture['case']->first());
 
         $this->transition->fire(compact('case'));
 
@@ -98,10 +92,7 @@ class TransitionTest extends \lithium\test\Unit {
      * Place specified by Case.
      */
     public function testOutputTokenProductionByCase() {
-        $case = Cases::create();
-        $case->save($this->fixture['case']->first());
-
-        $this->workflow->startCase($case);
+        $case = $this->workflow->createCase($this->fixture['case']->first());
 
         $this->transition->fire(compact('case'));
 

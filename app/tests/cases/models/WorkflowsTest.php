@@ -6,6 +6,7 @@ use li3_fixtures\test\Fixture;
 
 use app\models\Workflows;
 use app\models\Cases;
+use app\models\Tokens;
 
 class WorkflowsTest extends \lithium\test\Unit {
 
@@ -119,16 +120,17 @@ class WorkflowsTest extends \lithium\test\Unit {
     public function testTokenGenerationOnWorkflowStart() {
         $this->_createWorkflowWithStartPlace();
 
-        $case = Cases::create();
-        $case->save($this->fixture['case']->first());
+        $case = $this->workflow->createCase($this->fixture['case']->first());
 
-        $token = $this->workflow->startCase($case);
+        $token = Tokens::find('first', array(
+            'conditions' => array(
+                'workflow_id' => $this->workflow->_id,
+                'place_id'    => $this->startPlace->_id,
+                'case_id'     => $case->_id
+            )
+        ));
 
-        $this->assertTrue(
-            $this->workflow->_id == $token->workflow_id &&
-            $this->startPlace->_id == $token->place_id &&
-            $case->_id == $token->case_id
-        );
+        $this->assertTrue($token);
     }
 }
 

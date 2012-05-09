@@ -90,21 +90,25 @@ class Workflows extends \lithium\data\Model {
     }
 
     /**
-     * Start a Case in this Workflow and return the Token that was created in 
-     * the Workflow's Start Place.
+     * Start a Case in this Workflow 
      */
-    public function startCase($workflow, $case) {
-        // @todo: refactor into Place::createToken()
-        $data = array(
-            'workflow_id' => $workflow->_id,
-            'place_id'    => $workflow->getStartPlace()->_id,
-            'case_id'     => $case->_id
-        );
+    public function createCase($workflow, array $data = array(), array $options = array()) {
+        $data['workflow_id'] = $workflow->_id;
+        $case = Cases::create();
 
-        $token = Tokens::create();
+        if($case->save($data)) {
+            // @todo: refactor into Place::createToken()
+            $data = array(
+                'workflow_id' => $workflow->_id,
+                'place_id'    => $workflow->getStartPlace()->_id,
+                'case_id'     => $case->_id
+            );
 
-        if($token->save($data)) {
-            return $token;
+            $token = Tokens::create();
+
+            if($token->save($data)) {
+                return $case;
+            }
         }
 
         return false;
