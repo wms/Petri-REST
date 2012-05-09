@@ -1,6 +1,7 @@
 <?php
 
 namespace app\models;
+
 use \lithium\util\Validator;
 
 class Workflows extends \lithium\data\Model {
@@ -46,6 +47,15 @@ class Workflows extends \lithium\data\Model {
         return false;
     }
 
+    public function getStartPlace($workflow) {
+        return Place::find('first', array(
+            'conditions' => array(
+                'workflow_id' => $workflow->_id,
+                'is_start' => true
+            )
+        ));
+    }
+
     public static function createTransition($workflow, $transition, array $options = array()) {
         if($workflow->exists()) {
             $transition['workflow_id'] = $workflow->_id;
@@ -69,6 +79,27 @@ class Workflows extends \lithium\data\Model {
                 return $newArc;
             }
         }
+        return false;
+    }
+
+    /**
+     * Start a Case in this Workflow and return the Token that was created in 
+     * the Workflow's Start Place.
+     */
+    public function startCase($workflow, $case) {
+        // @todo: refactor into Place::createToken()
+        $data = array(
+            'workflow_id' => $workflow->_id,
+            'place_id'    => $workflow->getStartPlace()->_id,
+            'case_id'     => $case->_id
+        );
+
+        $token = Tokens::create();
+
+        if($token->save($data)) {
+            return $token;
+        }
+
         return false;
     }
 }

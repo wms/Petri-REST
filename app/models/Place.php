@@ -16,6 +16,15 @@ class Place extends \lithium\data\Model {
         '_id'       => array('type' => 'id'),
         'workflow_id'   => array('type' => 'id', 'default' => false, 'null' => false)
     );
+
+    public function countTokens($place) {
+        return Tokens::find('all', array(
+            'conditions' => array(
+                'place_id'    => $place->_id,
+                'workflow_id' => $place->workflow_id
+            )
+        ));
+    }
 }
 
 Validator::add('workflowExists', function($value) {

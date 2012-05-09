@@ -5,6 +5,7 @@ namespace app\tests\cases\models;
 use li3_fixtures\test\Fixture;
 
 use app\models\Workflows;
+use app\models\Cases;
 
 class WorkflowsTest extends \lithium\test\Unit {
 
@@ -15,7 +16,21 @@ class WorkflowsTest extends \lithium\test\Unit {
             'workflow'   => Fixture::load('Workflow'),
             'place'      => Fixture::load('Place'),
             'transition' => Fixture::load('Transition'),
-            'arc'        => Fixture::load('Arc')
+            'arc'        => Fixture::load('Arc'),
+            'case'       => Fixture::load('Case')
+        );
+    }
+
+    /**
+     * Create a Workflow with a Start Place
+     */
+    private function _createWorkflowWithStartPlace() {
+        $this->workflow->save($this->fixture['workflow']->first());
+
+        $this->startPlace = $this->workflow->createPlace(
+            $this->fixture['place']->first() + array(
+                'is_start' => true
+            )
         );
     }
 
@@ -95,6 +110,25 @@ class WorkflowsTest extends \lithium\test\Unit {
         );
 
         $this->assertTrue($arc && $arc->exists());
+    }
+
+    /**
+     * Test that a Token is placed in the Start place of a Workflow when a Case 
+     * is started against that Workflow
+     */
+    public function testTokenGenerationOnWorkflowStart() {
+        $this->_createWorkflowWithStartPlace();
+
+        $case = Cases::create();
+        $case->save($this->fixture['case']->first());
+
+        $token = $this->workflow->startCase($case);
+
+        $this->assertTrue(
+            $this->workflow->_id == $token->workflow_id &&
+            $this->startPlace->_id == $token->place_id &&
+            $case->_id == $token->case_id
+        );
     }
 }
 
