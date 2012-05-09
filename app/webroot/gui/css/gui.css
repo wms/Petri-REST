@@ -68,12 +68,16 @@ html, body {
 }
 
 .workflow-editor .canvas .ui-grid-item .transition {
-    margin-left: -16px;
+    margin-left: -12px;
     width: 20px;
     height: 28px;
     margin-top: -16px;
     background-color: pink;
     border: 2px solid black;
+}
+
+.workflow-editor .canvas .ui-grid-item .transition p.title {
+    margin-left: -22px;
 }
 
 .workflow-editor .canvas .ui-grid-item p.title {
