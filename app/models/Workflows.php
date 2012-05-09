@@ -8,7 +8,11 @@ class Workflows extends \lithium\data\Model {
 
     public $validates = array(
         'enabled' => array(
-            array('hasStart', 'message' => 'This Workflow cannot be enabled until a Start Place is defined.')
+            array(
+                'hasStart',
+                'message' => 'This Workflow cannot be enabled until a Start Place is defined.',
+                'on' => 'update'
+            )
         )
     );
 
