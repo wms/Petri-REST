@@ -3,6 +3,7 @@
 namespace app\controllers;
 
 use app\models\Cases;
+use app\models\Workflows;
 use lithium\action\DispatchException;
 
 class CasesController extends \lithium\action\Controller {
@@ -24,10 +25,15 @@ class CasesController extends \lithium\action\Controller {
 	}
 
 	public function add() {
-		$case = Cases::create();
-		$result = $case->save($this->request->data);
+        $workflow = Workflows::find('first', array(
+            'conditions' => array(
+                '_id' => $this->request->params['workflow_id']
+            )
+        ));
 
-		return compact('result', 'case');
+		$case = $workflow->createCase($this->request->data);
+
+		return compact('case');
 	}
 
 	public function edit() {

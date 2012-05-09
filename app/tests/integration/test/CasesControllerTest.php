@@ -1,13 +1,13 @@
 <?php
 
-namespace app\tests\cases\controllers;
+namespace app\tests\integration\test;
 
 use lithium\action\Request;
 use li3_fixtures\test\Fixture;
 
 use app\controllers\CasesController;
 
-class CasesControllerTest extends \lithium\test\Unit {
+class CasesControllerTest extends \lithium\test\Integration {
 
     public function setUp() {
         $this->fixture = array(
@@ -34,7 +34,7 @@ class CasesControllerTest extends \lithium\test\Unit {
 
 	public function tearDown() {}
 
-    public function testAdd() {
+    public function testAddProducesToken() {
         $request = new Request();
         $request->data = $this->fixture['case']->first();
         $request->params = array(
@@ -45,9 +45,15 @@ class CasesControllerTest extends \lithium\test\Unit {
 
         $result = $controller->add();
 
-        $this->assertTrue(
-            $result['case']->workflow_id == $this->workflow->_id
-        );
+        $token = \app\models\Tokens::find('first', array(
+            'conditions' => array(
+                'workflow_id' => $this->workflow->_id,
+                'place_id' => $this->place->_id,
+                'case_id' => $result['case']->_id
+            )
+        ));
+
+        $this->assertTrue($token);
     }
 }
 
