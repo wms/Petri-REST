@@ -19,10 +19,13 @@ class Workflows extends \lithium\data\Model {
 
     public static function __init(array $options = array()) {
         Validator::add('hasStart', function($value, $format, $options) {
-            if($value) {
-                return isset($options['values']['start_place_id']);
-            }
-            return true;
+            $workflow = Workflows::find('first', array(
+                'conditions' => array(
+                    '_id' => $options['values']['_id']
+                )
+            ));
+
+            return $workflow && $workflow->getStartPlace();
         });
 
         parent::__init($options);
