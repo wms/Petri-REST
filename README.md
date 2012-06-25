@@ -5,8 +5,7 @@
 Petri-REST is a workflow system based on Petri Nets, exposed via a RESTful
 interface.
 
-It is based on the Lithium framework and as such takes full advantage of PHP
-5.3.6.
+It is based on the Lithium framework and requires PHP 5.3
 
 ## Installation
 
